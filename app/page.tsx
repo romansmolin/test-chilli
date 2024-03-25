@@ -5,8 +5,7 @@ import { ProductCard } from "@/components/ProductCard"
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import { ProductType } from "@/global"
-import { CartPopUp } from "@/components/CartPopUp/CartPopUp"
-import { useAppContext } from '@/context'
+
 
 interface PaginationButtonsProps {
 	setCurrentPage: (page: number) => void;
@@ -27,7 +26,7 @@ export default function Home() {
 		const getProducts = async () => {
 			setIsLoading(true);
 			try {
-				const res = await fetch(`/api/products/${currentPage}/?search=${search}`);
+				const res = await fetch(`/api/products/${currentPage}${search !== "" ? `/?search=${search}` : ""}`);
 				const data = await res.json();
 
 				setProducts(data?.products);
@@ -50,7 +49,7 @@ export default function Home() {
 
 		const timeoutId = setTimeout(async () => {
 			setCurrentPage(1)
-			const res = await fetch(`/api/products/${currentPage}/?search=${newSearch}`);
+			const res = await fetch(`/api/products/${currentPage}/?search=${newSearch }`);
 			const searchResult = await res.json();
 
 			setProducts(searchResult?.products);
