@@ -18,16 +18,48 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  background: #fff
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+.writing-vertical-rl {
+  writing-mode: vertical-rl;
+}
+
+.transition-500 {
+  transition: .5s;
+}
+
+.blue_gradient {
+  @apply bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent;
+}
+
+.blue-gradient-bg {
+  @apply bg-gradient-to-r from-blue-600 to-cyan-600
+}
+
+.head_text {
+  @apply text-4xl sm:text-5xl font-extrabold leading-[1.15] text-black ;
+}
+
+.title{
+  position: relative;
+  font-size: 2rem;
+  text-transform: uppercase;
+  color: #000;
+  font-weight: bold;
+}
+.title::after{
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 72px;
+  height: 2px;
+  background-color: #000;
+  margin-left: .25rem;
 }
