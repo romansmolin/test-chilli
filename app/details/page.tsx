@@ -15,6 +15,7 @@ export default function Details() {
     });
     const searchParams = useSearchParams()
     const [productId, setProductId] = useState<string | null>(null)
+    const [loading, setLoading] = useState<boolean>(false)
 
     useEffect(() => {
         const id = searchParams.get('productId')
@@ -24,16 +25,21 @@ export default function Details() {
     useEffect(() => {
         if (productId) {
             const getProduct = async () => {
+                setLoading(true);
                 const res = await fetch(`api/products/product/${productId}`)
                 const targetProduct = await res.json()
                 setProduct(targetProduct[0])
+                setLoading(false);
             }
             getProduct()
         }
     }, [productId])
 
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
     return (
-		<Suspense fallback={<div>Loading...</div>}>
 			<ProductDetailsCard 
                 id={product?.id}
                 name={product?.name}
@@ -42,6 +48,5 @@ export default function Details() {
                 description={product?.description}
                 currency={product?.currency}
             />
-		</Suspense>
     );
 }
