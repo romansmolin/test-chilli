@@ -4,20 +4,25 @@ import type { NextRequest } from 'next/server';
 export const GET = async (request: NextRequest, { params }: any) => {
     try {
         const response = await fetch('https://run.mocky.io/v3/b54fe93f-f5a1-426b-a76c-e43d246901fd');
+
         if (!response.ok) {
-            throw new Error(`Failed to fetch products: ${response.statusText}`);
+            throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
-        const { products } = await response.json();
+        const data = await response.json();
+        if (!data.products) {
+            throw new Error('No products key found in response');
+        }
+
+        const products = data.products;
         const { page = 1 } = params;  
-        const search = request.nextUrl.searchParams.get("search") ?? ""
+        const search = request.nextUrl.searchParams.get("search") ?? "";
 
         const filteredProducts = filterProducts(products, search);
 
         const itemsPerPage = 8;
         const startIndex = (page - 1) * itemsPerPage;
         const slicedProducts = filteredProducts.slice(startIndex, startIndex + itemsPerPage);
-
         const maxPage = Math.ceil(filteredProducts.length / itemsPerPage);
 
         const obj = {
@@ -32,27 +37,21 @@ export const GET = async (request: NextRequest, { params }: any) => {
                 'Content-Type': 'application/json'
             }
         });
-    } catch (err: any) {
-        return new Response(JSON.stringify({ error: `Failed to fetch products: ${err.message}` }), {
-            status: 500,
-            headers: {
-                'Content-Type': 'application/json'
-            }
+    } catch (err) {
+        console.error(err);
+        return new Response(`Failed to fetch products: ${err}`, {
+            status: 500
         });
     }
 };
 
 const filterProducts = (products: ProductType[], search: string) => {
-
     if (!search || search.trim() === '') {
         return products;
     }
 
     const regex = new RegExp(search, 'i');
-
-    const filteredProducts = products.filter((item: ProductType) =>
+    return products.filter((item: ProductType) =>
         regex.test(item.name) || regex.test(item.category)
     );
-
-    return filteredProducts
 };
