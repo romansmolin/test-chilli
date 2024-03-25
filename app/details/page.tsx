@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import { ProductDetailsCard } from "@/components/ProductDetailsCard"
 import { ProductType } from "@/global"
@@ -33,7 +33,7 @@ export default function Details() {
     }, [productId])
 
     return (
-		<>
+		<Suspense fallback={<div>Loading...</div>}>
 			<ProductDetailsCard 
                 id={product?.id}
                 name={product?.name}
@@ -42,6 +42,6 @@ export default function Details() {
                 description={product?.description}
                 currency={product?.currency}
             />
-		</>
+		</Suspense>
     );
 }
