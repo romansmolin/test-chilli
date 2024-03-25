@@ -27,7 +27,7 @@ export const GET = async (request: NextRequest, { params }: any) => {
         });
     } catch (err) {
         console.log('Problem appeared trying to get products: ', err);
-        return new Response("Failed to fetch products", {
+        return new Response(`Failed to fetch products: ${err}`, {
             status: 500
         });
     }
